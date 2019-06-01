@@ -14,7 +14,16 @@ wget -qO- http://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar xv
 chown -R root:root /mnt
 
 export HOME=/mnt/server
-./steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir /mnt/server +app_update ${SRCDS_APPID} +quit
+cd /mnt/server/
+if [ ! -z ${BETA} ]; then
+    if [ ! -z ${SRCDS_APPID} ]; then
+        ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${BETA} +quit
+    fi
+else
+    if [ ! -z ${SRCDS_APPID} ]; then
+        ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} +quit
+    fi
+fi
 
 cd /mnt/server
 # Download Holdfast's server files from their Dropbox location
