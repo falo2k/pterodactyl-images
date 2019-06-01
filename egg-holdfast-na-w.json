@@ -8,7 +8,7 @@
     "author": "mason@rowe.sh",
     "description": "Holdfast: Nations at War",
     "image": "masonr\/pterodactyl-images:holdfast",
-    "startup": "wine \".\/Holdfast\\ NaW.exe\" -startserver -batchmode -screen-width 640 -screen-height 480 -screen-quality Fastest -framerate 60 -servercarbonplayers 0 -serverConfigFilePath serverconfig.txt -logFile logs_output\/outputlog_server.txt -logArchivesDirectory logs_archive -s {{SERVER_IP}} -p {{SERVER_PORT}} -l \"94.130.66.231\" -o 7101",
+    "startup": "xvfb-run --auto-servernum wine \".\/Holdfast\\ NaW.exe\" -startserver -batchmode -screen-width 640 -screen-height 480 -screen-quality Fastest -framerate 60 -servercarbonplayers 0 -serverConfigFilePath serverconfig.txt -logFile logs_output\/outputlog_server.txt -logArchivesDirectory logs_archive -s {{SERVER_IP}} -p {{SERVER_PORT}} -l \"94.130.66.231\" -o 7101",
     "config": {
         "files": "{\r\n    \"serverconfig.txt\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"server_name\": \"server_name {{server.build.env.SERVER_NAME}}\",\r\n            \"maximum_players\": \"maximum_players {{server.build.env.PLAYERS}}\",\r\n            \"server_welcome_message\": \"server_welcome_message {{server.build.env.MOTD}}\",\r\n            \"server_region\": \"server_region {{server.build.env.REGION}}\",\r\n            \"server_admin_password\": \"server_admin_password {{server.build.env.ADMIN_PASS}}\",\r\n            \"server_password\": \"server_password {{server.build.env.SERVER_PASS}}\",\r\n            \"server_port\": \"server_port {{server.build.default.port}}\",\r\n            \"steam_communications_port\": \"steam_communications_port {{server.build.env.SERVER_COMM_PORT}}\",\r\n            \"steam_query_port\": \"steam_query_port {{server.build.env.SERVER_QUERY_PORT}}\"\r\n        }\r\n    }\r\n}",
         "startup": "{\r\n    \"done\": \"Mono config path\",\r\n    \"userInteraction\": []\r\n}",
@@ -40,6 +40,15 @@
             "user_viewable": 1,
             "user_editable": 1,
             "rules": "required|string|max:500"
+        },
+        {
+            "name": "Beta Branch",
+            "description": "Name of the beta branch if wanted",
+            "env_variable": "BETA",
+            "default_value": "Welcome!",
+            "user_viewable": 1,
+            "user_editable": 1,
+            "rules": "nullable|string|max:500"
         },
         {
             "name": "Server Region",
