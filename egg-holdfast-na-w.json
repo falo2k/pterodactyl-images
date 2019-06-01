@@ -3,11 +3,11 @@
     "meta": {
         "version": "PTDL_v1"
     },
-    "exported_at": "2019-01-11T13:47:44-05:00",
+    "exported_at": "2019-06-01T22:47:59+01:00",
     "name": "Holdfast NaW",
     "author": "mason@rowe.sh",
     "description": "Holdfast: Nations at War",
-    "image": "falo2k\/pterodactyl-images:holdfast",
+    "image": "falo\/pterodactyl-images:holdfast",
     "startup": "xvfb-run --auto-servernum wine \".\/Holdfast\\ NaW.exe\" -startserver -batchmode -screen-width 640 -screen-height 480 -screen-quality Fastest -framerate 60 -servercarbonplayers 0 -serverConfigFilePath serverconfig.txt -logFile logs_output\/outputlog_server.txt -logArchivesDirectory logs_archive -s {{SERVER_IP}} -p {{SERVER_PORT}} -l \"94.130.66.231\" -o 7101",
     "config": {
         "files": "{\r\n    \"serverconfig.txt\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"server_name\": \"server_name {{server.build.env.SERVER_NAME}}\",\r\n            \"maximum_players\": \"maximum_players {{server.build.env.PLAYERS}}\",\r\n            \"server_welcome_message\": \"server_welcome_message {{server.build.env.MOTD}}\",\r\n            \"server_region\": \"server_region {{server.build.env.REGION}}\",\r\n            \"server_admin_password\": \"server_admin_password {{server.build.env.ADMIN_PASS}}\",\r\n            \"server_password\": \"server_password {{server.build.env.SERVER_PASS}}\",\r\n            \"server_port\": \"server_port {{server.build.default.port}}\",\r\n            \"steam_communications_port\": \"steam_communications_port {{server.build.env.SERVER_COMM_PORT}}\",\r\n            \"steam_query_port\": \"steam_query_port {{server.build.env.SERVER_QUERY_PORT}}\"\r\n        }\r\n    }\r\n}",
@@ -17,7 +17,7 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/bash\r\n# Holdfast Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\napt -y update\r\napt -y install wget ca-certificates unzip\r\n\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncd \/mnt\/server\/steamcmd\r\nwget -qO- http:\/\/media.steampowered.com\/installer\/steamcmd_linux.tar.gz | tar xvz\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\n\r\nexport HOME=\/mnt\/server\r\n.\/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir \/mnt\/server +app_update ${SRCDS_APPID} +quit\r\n\r\ncd \/mnt\/server\r\nwget -O holdfast_naw_public_servers.zip https:\/\/www.dropbox.com\/sh\/ppkfny3r9kcnz8x\/AADiIXOrlAWPh-XbhPpimw0ja?dl=1\r\nunzip holdfast_naw_public_servers.zip\r\nrm holdfast_naw_public_servers.zip\r\ncp serverconfig_server1_armybattlefield.txt serverconfig.txt\r\nchmod 755 \/mnt\/server\/*",
+            "script": "#!\/bin\/bash\r\n# Holdfast Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\napt -y update\r\napt -y install wget ca-certificates unzip\r\n\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncd \/mnt\/server\/steamcmd\r\nwget -qO- http:\/\/media.steampowered.com\/installer\/steamcmd_linux.tar.gz | tar xvz\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\n\r\nexport HOME=\/mnt\/server\/\r\nchmod a+x \/mnt\/server\/steamcmd\/linux32\/steamcmd\r\npwd\r\ncd \/mnt\/server\/steamcmd\r\nif [ ! -z ${BETA} ]; then\r\n    if [ ! -z ${SRCDS_APPID} ]; then\r\n        .\/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir \/mnt\/server +app_update ${SRCDS_APPID} -beta ${BETA} +quit\r\n    fi\r\nelse\r\n    if [ ! -z ${SRCDS_APPID} ]; then\r\n        .\/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir \/mnt\/server +app_update ${SRCDS_APPID} +quit\r\n    fi\r\nfi\r\n\r\ncd \/mnt\/server\r\nwget -O holdfast_naw_public_servers.zip https:\/\/www.dropbox.com\/sh\/ppkfny3r9kcnz8x\/AADiIXOrlAWPh-XbhPpimw0ja?dl=1\r\nunzip holdfast_naw_public_servers.zip\r\nrm holdfast_naw_public_servers.zip\r\ncp serverconfig_server1_armybattlefield.txt serverconfig.txt\r\nchmod 755 \/mnt\/server\/*\r\nmv \/mnt\/server\/Mono \/mnt\/server\/Monoold",
             "container": "ubuntu:18.04",
             "entrypoint": "bash"
         }
@@ -45,7 +45,7 @@
             "name": "Beta Branch",
             "description": "Name of the beta branch if wanted",
             "env_variable": "BETA",
-            "default_value": "Welcome!",
+            "default_value": "",
             "user_viewable": 1,
             "user_editable": 1,
             "rules": "nullable|string|max:500"
