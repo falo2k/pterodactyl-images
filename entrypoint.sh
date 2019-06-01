@@ -5,10 +5,16 @@ cd /home/container
 export INTERNAL_IP=`ip route get 1 | awk '{print $NF;exit}'`
 
 # Update Source Server
-if [ ! -z ${SRCDS_APPID} ]; then
-    ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} +quit
+if [ ! -z ${BETA} ]; then
+    if [ ! -z ${SRCDS_APPID} ]; then
+        ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${BETA} +quit
+    fi
+else
+    if [ ! -z ${SRCDS_APPID} ]; then
+        ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} +quit
+    fi
 fi
-
+    
 # Set up wine environment
 wineboot
 winetricks sound=disabled
