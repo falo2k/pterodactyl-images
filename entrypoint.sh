@@ -19,8 +19,8 @@ fi
 wineboot
 winetricks sound=disabled
 
-# Spawn a virtual frame buffer
-Xvfb :0 -screen 0 1024x768x16 -ac &
+# Spawn a virtual frame buffer - Replace with xvfb-run
+#Xvfb :0 -screen 0 1024x768x16 -ac &
 
 # Replace Startup Variables
 MODIFIED_STARTUP=`eval echo $(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')`
