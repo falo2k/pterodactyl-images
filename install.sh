@@ -20,7 +20,11 @@ cd /mnt/server/
 if [ ! -z ${BETA} ]; then
     echo Beta branch
     if [ ! -z ${SRCDS_APPID} ]; then
-        ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${BETA} +quit
+        if [ ! -z ${BETA_PW} ]; then
+            ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${BETA} -betapassword ${BETA_PW} +quit            
+        else
+            ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +login ${STEAM_USER} ${STEAM_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${BETA} +quit
+        fi
     fi
 else
     if [ ! -z ${SRCDS_APPID} ]; then
